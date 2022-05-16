@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        
+          <div class="card-body">
+                <form action="" method="POST" class="text-center border border-light p-5">
+                    <p class="h4 mb-4">Sign in</p>
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    {% if request.GET.next %}
+                        <input type="hidden" name="next" value="{{ request.GET.next }}">
+                    {% endif %}
+                    <button class="btn btn-primary"" type="submit" id="submitbutton">Login</button>
+                    <br><br>
+                    <p>Not a member?
+                        <a href="/accounts/register">Register</a>
+                    </p>
+                    <p>Forgot Password?
+                        <a href="/accounts/reset_password">Reset Password</a>
+                    </p>
+            </form>
+            </div>
+        
+    </div>
+    </div>
+</div>
+
+
+{% endblock %}

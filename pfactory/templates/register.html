@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        
+        <div class="card-body">
+        <form class="text-center border border-light p-5" method="POST" action="">
+            {% csrf_token %}
+
+            <p class="h4 mb-4">Sign up</p>
+            {{ form.username }}
+            {% if form.username.errors %}
+            <span class="help-block">{{ form.username.errors.0 }}</span>
+            {% endif %}
+            <br>
+            {{ form.email }}
+            {% if form.email.errors %}
+            <span class="help-block">{{ form.email.errors.0 }}</span>
+            {% endif %}
+            <br>
+            <div class="form-row mb-4">
+                <div class="col">
+                    {{ form.firstname }}
+                </div>
+                <div class="col">
+                    {{ form.lastname }}
+                </div>
+            </div>
+            
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+            <span class="help-block">{{ form.password1.errors.0 }}</span>
+            {% endif %}
+            <br>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+            <span class="help-block">{{ form.password2.errors.0 }}</span>
+            {% endif %}
+            <br>
+            
+            <button class="btn btn-primary" type="submit">Register</button>
+            <hr>
+
+            <!-- Terms of service -->
+            <p>By clicking
+                <em>Register</em> you agree to our terms of service</a>
+        </form>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
