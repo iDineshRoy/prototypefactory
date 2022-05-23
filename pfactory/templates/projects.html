@@ -1,16 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <br>
-<div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">Card title</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" class="btn btn-primary">View project</a>
-  </div>
-</div>
-</div>
 
+  <div class="container">
+      <br>
+{% if user.is_authenticated %}
+<div class="d-grid gap-2">
+  <a href="{% url 'add_project' %}" class="btn btn-primary" tabindex="-1" role="button">Add Project</a>
+</div>
+{% endif %}
+<br>
+
+{% if projects %}
+{% for p in projects %}
+  <div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">{{ p.title }}</h5>
+      <p class="card-text">{{ p.description|safe }}</p>
+      <a href="#" class="btn btn-primary">Register Interest</a>
+    </div>
+  </div>
+  
+{% endfor %}
+{% endif %}
+</div>
 {% endblock %}

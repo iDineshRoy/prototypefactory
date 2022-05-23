@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'rest_framework',
     'crispy_forms',
+    'ckeditor',
     'microsoft_auth',
     'projects',
 ]
