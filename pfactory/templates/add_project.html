@@ -1,17 +1,15 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-
-<div class="col-sm-9 col-md-5 col-lg-4 mx-auto">
-    <div class="row">
-        <div class="card-body">
-        <h5 class="card-title">Enter more details:</h5>
-        <form action="" method="POST">
-            {% csrf_token %}
-            {{ form }}
-            <button>Submit</button>
-        </form>
-        </div>
-    </div>
+<div class="container my-5 z-depth-1">
+      <form method="post" action="" enctype="multipart/form-data" class="col-md-10">
+        {% csrf_token %}
+        {{ form|crispy }}
+        {{ form.media }}
+        <br>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </form>
+      <br>
 </div>
 {% endblock %}

@@ -13,14 +13,16 @@
 
 {% if projects %}
 {% for p in projects %}
-  <div class="card" style="width: 18rem;">
+  <div class="card">
     <div class="card-body">
       <h5 class="card-title">{{ p.title }}</h5>
       <p class="card-text">{{ p.description|safe }}</p>
+      <p class="card-text">Project by: {{ p.user.first_name }} {{ p.user.last_name }}</p>
+      <p class="card-text">Posted on: {{ p.timestamp }}</p>
       <a href="#" class="btn btn-primary">Register Interest</a>
     </div>
   </div>
-  
+  <br>
 {% endfor %}
 {% endif %}
 </div>

@@ -1,5 +1,4 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from .models import Project
 from .forms import ProjectModelForm
@@ -14,4 +13,10 @@ def view_project(request):
 
 def add_project(request):
     form = ProjectModelForm(request.POST or None)
-    return render(request, "add_project.html", { "form": form })
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.user = request.user
+        obj.save()
+        return redirect('/')
+    context = { 'form': form }
+    return render(request, "add_project.html", context)
