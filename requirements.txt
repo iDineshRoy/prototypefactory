@@ -4,8 +4,10 @@ cffi==1.15.0
 charset-normalizer==2.0.12
 cryptography==36.0.2
 Django==4.0.3
+django-ckeditor==6.1.0
 django-crispy-forms==1.14.0
 django-filter==21.1
+django-js-asset==2.0.0
 django_microsoft_auth==2.4.1
 djangorestframework==3.13.1
 idna==3.3
