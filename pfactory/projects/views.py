@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_list_or_404, render, redirect, get_object_or_404
 
 from .models import Project
 from .forms import ProjectModelForm
@@ -20,3 +20,11 @@ def add_project(request):
         return redirect('/')
     context = { 'form': form }
     return render(request, "add_project.html", context)
+
+def register_interest(request, p_id):
+    obj = get_object_or_404(Project, pk=p_id)
+    if obj.status == "open":
+        obj.status = "registered interest"
+    obj.save(update_fields=["status"])
+    projects = get_list_or_404(Project, pk=p_id)
+    return render(request, "projects.html", { "projects": projects })

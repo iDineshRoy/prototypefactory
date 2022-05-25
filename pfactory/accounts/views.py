@@ -1,22 +1,41 @@
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm, UserLoginForm
+from .forms import RegistrationForm, SignUpForm, UserLoginForm
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.models import User, auth
+# from django.contrib.auth.models import User, auth
 from django.contrib.auth import logout, authenticate, login, update_session_auth_hash
 
-def register(request):
-    form = RegistrationForm(request.POST or None)
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+def register_old(request):
+    form = SignUpForm(request.POST or None)
     if form.is_valid():
         username = request.POST['username']
         password1 = request.POST['password1']
         firstname = request.POST['firstname']
         lastname = request.POST['lastname']
         email = request.POST['email']
+        # is_client = request.POST['is_client']
+        # is_student = request.POST['is_student']
         obj=User.objects.create_user(username=username, password=password1, email=email, first_name=firstname.title(), last_name=lastname.title())
         obj.save()
         update_session_auth_hash(request, request.user)
         return redirect("/")
     context = {"title": "Registration Form", "form": form}
+    return render(request, 'register.html', context)
+
+def register(request):
+    msg = None
+    if request.method == "POST":
+        form = SignUpForm(request.POST or None)
+        if form.is_valid():
+            user = form.save()
+            msg = "User Created"
+            update_session_auth_hash(request, request.user)
+            return redirect("/")
+    else:
+        form = SignUpForm()
+    context = {"title": "Registration Form", "form": form, "msg": msg}
     return render(request, 'register.html', context)
 
 def logout_view(request):

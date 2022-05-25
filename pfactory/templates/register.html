@@ -39,7 +39,10 @@
             <span class="help-block">{{ form.password2.errors.0 }}</span>
             {% endif %}
             <br>
-            
+            <span class="help-block">{{ form.is_student }} Student</span>
+            <br>
+            <span class="help-block">{{ form.is_client }} Client</span>
+            <br>
             <button class="btn btn-primary" type="submit">Register</button>
             <hr>
 

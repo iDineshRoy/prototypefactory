@@ -4,7 +4,7 @@
 
   <div class="container">
       <br>
-{% if user.is_authenticated %}
+{% if user.is_client %}
 <div class="d-grid gap-2">
   <a href="{% url 'add_project' %}" class="btn btn-primary" tabindex="-1" role="button">Add Project</a>
 </div>
@@ -15,11 +15,15 @@
 {% for p in projects %}
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">{{ p.title }}</h5>
+      <h5 class="card-title">{{ p.id }}: {{ p.title }}</h5>
       <p class="card-text">{{ p.description|safe }}</p>
       <p class="card-text">Project by: {{ p.user.first_name }} {{ p.user.last_name }}</p>
       <p class="card-text">Posted on: {{ p.timestamp }}</p>
-      <a href="#" class="btn btn-primary">Register Interest</a>
+      {% if p.status == "open" %}
+      <a href="{% url 'register_interest' p.id %}" class="btn btn-primary">Register Interest</a>
+      {% elif p.status == "registered interest" %}
+      <a href="{% url 'register_interest' p.id %}" class="btn btn-primary disabled">Registered Interest</a>
+      {% endif%}
     </div>
   </div>
   <br>

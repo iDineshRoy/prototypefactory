@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ckeditor',
     'microsoft_auth',
+    'accounts',
     'projects',
 ]
 
@@ -93,6 +94,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend' # if you also want to use Django's authentication
     # I recommend keeping this with at least one database superuser in case of unable to use others
 ]
+
+AUTH_USER_MODEL = 'accounts.User'
 
 MICROSOFT_AUTH_LOGIN_TYPE = 'ma'
 

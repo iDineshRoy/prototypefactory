@@ -7,4 +7,5 @@ class Project(models.Model):
     title = models.CharField(max_length=200, null=True)
     description = RichTextField()
     resources = models.CharField(max_length=200, null=True)
+    status = models.CharField(max_length=50, null=True, default="open")
     timestamp = models.DateTimeField(auto_now_add=True)

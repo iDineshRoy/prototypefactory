@@ -1,8 +1,27 @@
+from configparser import InterpolationMissingOptionError
 from django import forms
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.utils.encoding import smart_str
 from django.contrib.auth import password_validation
+from django.contrib.auth.forms import UserCreationForm
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+from .models import User as UserModel
+
+
+class SignUpForm(UserCreationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Username"}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':"form-control", 'placeholder':"Email"}))
+    firstname = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"First Name"}))
+    lastname = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Last Name"}))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':"form-control", 'placeholder':"Password"}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':"form-control", 'placeholder':"Re-enter Password"}))
+
+    class Meta:
+        model = UserModel
+        fields = ['username', 'email', 'firstname', 'lastname','password1', 'password2', 'is_student', 'is_client']
 
 class RegistrationForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Username"}))

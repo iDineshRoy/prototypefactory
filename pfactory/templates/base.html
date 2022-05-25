@@ -39,26 +39,27 @@
 			<a href="#" class="nav-item nav-link"><i class="fa fa-envelope"></i><span>Messages</span></a>		
 			<a href="#" class="nav-item nav-link"><i class="fa fa-bell"></i><span>Notifications</span></a>
 			<div class="nav-item dropdown">
-        {% if user.is_authenticated %}
-				<a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" class="avatar" alt="Avatar"> {{ user.username }}<b class="caret"></b></a>
-        {% else %}
-        <a href="" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" class="avatar" alt="Avatar">User<b class="caret"></b></a>
-        {% endif %}
-				<div class="dropdown-menu">
-          {% if user.is_authenticated %}
-          <a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a>
-          {% else %}
-          <a href="{% url 'login' %}" class="dropdown-item"><b class="fa fa-user-o"></b> Login</a>
-          <a href="{% url 'register' %}" class="dropdown-item"><b class="fa fa-user-o"></b> Register</a>
-          {% endif %}
-					
-					<a href="#" class="dropdown-item"><i class="fa fa-calendar-o"></i> Calendar</a>
-					<a href="#" class="dropdown-item"><i class="fa fa-sliders"></i> Settings</a>
-          {% if user.is_authenticated %}
-					<div class="divider dropdown-divider"></div>
-					<a href="{% url 'logout' %}" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a>
-          {% endif %}
-				</div>
+				
+				{% if user.is_authenticated %}
+						<a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="{% static 'images/user-loggedin.png' %}" class="avatar" alt="Avatar"> {{ request.user.first_name }} {{ request.user.last_name }}<b class="caret"></b></a>
+				{% else %}
+				<a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="{% static 'images/user.png' %}" class="avatar" alt="Avatar">Login/Register<b class="caret"></b></a>
+				{% endif %}
+					<div class="dropdown-menu">
+						{% if user.is_authenticated %}
+						<a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a>
+						{% else %}
+						<a href="{% url 'login' %}" class="dropdown-item"><b class="fa fa-user-o"></b> Login</a>
+						<a href="{% url 'register' %}" class="dropdown-item"><b class="fa fa-user-o"></b> Register</a>
+						{% endif %}
+									
+						
+						{% if user.is_authenticated %}
+						<div class="divider dropdown-divider"></div>
+							<a href="{% url 'logout' %}" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a>
+						
+						{% endif %}
+					</div>
 			</div>
 		</div>
 	</div>
