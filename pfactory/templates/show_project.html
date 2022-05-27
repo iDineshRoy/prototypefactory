@@ -11,12 +11,11 @@
 {% endif %}
 <br>
 
-{% if projects %}
-{% for p in projects %}
+{% if p %}
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.title }}</a></h5>
-      <p class="card-text">{{ p.description|safe|slice:":255" }}</p>
+      <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.id }}: {{ p.title }}</a></h5>
+      <p class="card-text">{{ p.description|safe }}</p>
       <p class="card-text">Project by: {{ p.user.first_name }} {{ p.user.last_name }}</p>
       <p class="card-text">Posted on: {{ p.timestamp }}</p>
       {% if request.user.is_student  %}
@@ -29,7 +28,7 @@
     </div>
   </div>
   <br>
-{% endfor %}
+
 {% endif %}
 </div>
 {% endblock %}
