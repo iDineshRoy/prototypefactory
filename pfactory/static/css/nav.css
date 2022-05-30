@@ -10,6 +10,16 @@ body {
 	border: none;
 	box-shadow: 0 0 4px rgba(0,0,0,.1);
 }
+
+.navbarclient {
+	color: #fff;
+	background: #a71072 !important;
+	padding: 5px 16px;
+	border-radius: 0;
+	border: none;
+	box-shadow: 0 0 4px rgba(0,0,0,.1);
+}
+
 .navbar img {
 	border-radius: 50%;
 	width: 36px;

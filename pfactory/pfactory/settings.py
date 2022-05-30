@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'microsoft_auth',
     'accounts',
     'projects',
+    'searches',
 ]
 
 SITE_ID = 1

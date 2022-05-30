@@ -7,7 +7,7 @@ from django.contrib.auth import logout, authenticate, login, update_session_auth
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-def register_old(request):
+def register(request):
     form = SignUpForm(request.POST or None)
     if form.is_valid():
         username = request.POST['username']
@@ -15,23 +15,34 @@ def register_old(request):
         firstname = request.POST['firstname']
         lastname = request.POST['lastname']
         email = request.POST['email']
-        # is_client = request.POST['is_client']
-        # is_student = request.POST['is_student']
-        obj=User.objects.create_user(username=username, password=password1, email=email, first_name=firstname.title(), last_name=lastname.title())
+        try:
+            is_client = request.POST['is_client']
+            is_client = True
+        except:
+            is_client = False
+        try:
+            is_student = request.POST['is_student']
+            is_student = True
+        except:
+            is_student = False
+        obj=User.objects.create_user(username=username, password=password1, email=email, first_name=firstname.title(), last_name=lastname.title(), is_student=is_student, is_client=is_client)
         obj.save()
         update_session_auth_hash(request, request.user)
         return redirect("/")
     context = {"title": "Registration Form", "form": form}
     return render(request, 'register.html', context)
 
-def register(request):
+def register_new(request):
     msg = None
+    form = SignUpForm(request.POST or None)
     if request.method == "POST":
-        form = SignUpForm(request.POST or None)
         if form.is_valid():
-            user = form.save()
+            # form.save(commit=False)
+            form.first_name = request.POST["firstname"].title()
+            form.last_name = request.POST["lastname"].title()
+            form.save()
             msg = "User Created"
-            update_session_auth_hash(request, request.user)
+            # update_session_auth_hash(request, request.user)
             return redirect("/")
     else:
         form = SignUpForm()
