@@ -55,11 +55,6 @@ def approve_to_work(request, p_id):
     obj = get_object_or_404(Project, pk=p_id)
     if obj.status == "registered interest" and obj.user == request.user:
         obj.status = "approved"
-    # if obj.interests.filter(id=request.user.id).exists():
-    #     obj.interests.remove(request.user)
-    # else:
-    #     obj.likes.add(request.user)
-        obj.interests.add(request.user)
     obj.save(update_fields=["status"])
     projects = get_list_or_404(Project, pk=p_id)
     return render(request, "projects.html", { "projects": projects })
@@ -68,11 +63,14 @@ def deny_to_work(request, p_id):
     obj = get_object_or_404(Project, pk=p_id)
     if obj.status == "registered interest" and obj.user == request.user:
         obj.status = "open"
-    # if obj.interests.filter(id=request.user.id).exists():
-    #     obj.interests.remove(request.user)
-    # else:
-    #     obj.likes.add(request.user)
-        obj.interests.add(request.user)
+    obj.save(update_fields=["status"])
+    projects = get_list_or_404(Project, pk=p_id)
+    return render(request, "projects.html", { "projects": projects })
+
+def initiate_work(request, p_id):
+    obj = get_object_or_404(Project, pk=p_id)
+    if obj.status == "approved":
+        obj.status = "work in progress"
     obj.save(update_fields=["status"])
     projects = get_list_or_404(Project, pk=p_id)
     return render(request, "projects.html", { "projects": projects })

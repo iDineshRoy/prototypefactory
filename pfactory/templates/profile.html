@@ -5,20 +5,30 @@
   <div class="container">
       <br>
 {% if request.user.is_student %}
-<span class="badge badge-pill badge-dark">Student</span> <br> <br>
+<span class="badge badge-pill badge-dark">Student Dashboard</span> <br> <br>
     {% if projects %}
     {% for p in projects %}
     <div class="card">
         <div class="card-body">
-        <h5 class="card-title">{{ p.id }}: {{ p.title }}</h5>
-        <p class="card-text">Project by: {{ p.user.first_name }} {{ p.user.last_name }}</p>
-        <p class="card-text">Posted on: {{ p.timestamp }}</p>
+        <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.title }}</a></h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ p.resources }}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6>
+        <p class="card-text">{{ p.description|safe|slice:":255" }}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
+        <p class="card-text">Project by: <b>{{ p.user.first_name }} {{ p.user.last_name }}</b></p>
+        <small><i class="material-icons" style="font-size:16px">place</i> {{ p.location }} <br> <i>Posted on: {{ p.timestamp }}</i></small>
         {% if request.user.is_student  %}
-        {% if p.status == "open" %}
-        <a href="{% url 'register_interest' p.id %}" class="btn btn-primary">Register Interest</a>
+        {% if p.status == "registered interest" %}
+        <div class="alert alert-info" role="alert">
+        Awaiting approval...
+        </div>
         {% elif p.status == "approved" %}
         <div class="alert alert-success" role="alert">
         Congratulations! Your interest has been approved by the client. <br> You can start working on your project!
+        </div>
+        <a href="{% url 'initiate_work' p.id %}" class="btn btn-success">Start Working</a>
+        {% elif p.status == "work in progress" %}
+        <div class="alert alert-success" role="alert">
+        Great! <br> It's awesome to work on the project you're interested in. <br>Feel free to shoot the questions if you have any, for the client.
         </div>
         {% endif%}
         {% endif%}
@@ -30,16 +40,22 @@
 {% endif %}
 
 {% if request.user.is_client %}
-<span class="badge badge-pill badge-dark">Client</span> <br> <br>
+<h6 class="badge badge-pill badge-dark">Client Dashboard</h6> <br> <br>
     {% for p in posted_by %}
     {% if request.user == p.user %}
     <div class="card">
         <div class="card-body">
-        <h5 class="card-title">{{ p.id }}: {{ p.title }}</h5>
-        <p class="card-text">Project by: {{ p.user.first_name }} {{ p.user.last_name }}</p>
-        <p class="card-text">Posted on: {{ p.timestamp }}</p>
+        <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.title }}</a></h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ p.resources }}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6>
+        <p class="card-text">{{ p.description|safe|slice:":255" }}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
+        <p class="card-text">Project by: <b>{{ p.user.first_name }} {{ p.user.last_name }}</b></p>
+        <small><i class="material-icons" style="font-size:16px">place</i> {{ p.location }} <br> <i>Posted on: {{ p.timestamp }}</i></small>
+        <p>Interests registered by: </p>
         {% for a in p.interests.all %}
-        <p class="card-text">Interests registered by: {{ a.first_name }} {{ a.last_name }}</p>
+        {% if a.is_student %}
+        <p class="card-text"><b>{{ a.first_name }} {{ a.last_name }}</b></p> &nbsp;
+        {% endif %}
         {% endfor %}
         
         {% if p.status == "registered interest" %}

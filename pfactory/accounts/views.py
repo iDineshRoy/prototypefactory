@@ -65,7 +65,7 @@ def signin(request):
             if 'next' in request.POST:
                 return redirect(request.POST.get('next'))
             else:
-                return redirect('/')
+                return redirect("profile",  request.user.id)
         else:
             context = {'message':"Login unsuccessful!"}
             return render(request, 'pages/message.html', context)
