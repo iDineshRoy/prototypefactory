@@ -15,11 +15,11 @@
     <div class="card-body">
       <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.title }}</a></h5>
       <h6 class="card-subtitle mb-2 text-muted">{{ p.resources }}</h6>
-      <h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6>
-      <p class="card-text">{{ p.description|safe|slice:":255" }}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
+      <a href="{% url 'company' p.company %}"><h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6></a>
+      <p class="card-text">{{ p.description.strip|safe|slice:":255" }}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
       <p class="card-text">Project by: <b>{{ p.user.first_name }} {{ p.user.last_name }}</b></p>
       <a href="{% url 'tags' p.industry %}"><h6><span class="badge bg-secondary">{{ p.industry }}</span></h6></a>
-      <small><i class="material-icons" style="font-size:16px">place</i> {{ p.location }} <br> <i>Posted on: {{ p.timestamp }}</i></small>
+      <small><i class="material-icons" style="font-size:16px">place</i><a href="{% url 'location' p.location %}"> {{ p.location }}</a> <br> <i>Posted on: {{ p.timestamp }}</i></small>
       
       {% if request.user.is_student  %}
       {% if p.status == "open" %}
@@ -33,5 +33,26 @@
   <br>
 {% endfor %}
 {% endif %}
+
+<div class="row justify-content-center">
+  <nav aria-label="...">
+    <ul class="pagination">
+        {% if projects.has_previous %}
+        <li class="page-item"><a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ projects.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        {% for pg in projects.paginator.page_range %}
+            {% if projects.number == pg %}
+                <li class="page-item active"><a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ pg }}">{{ pg }}</a></li>
+            {% elif pg > projects.number|add:'-3' and pg < projects.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ pg }}">{{ pg }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if projects.has_next %}
+            <li class="page-item"><a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ projects.next_page_number }}">Next</a></li>
+        {% endif %}
+    </ul>
+  </nav>
+</div>
+
 </div>
 {% endblock %}

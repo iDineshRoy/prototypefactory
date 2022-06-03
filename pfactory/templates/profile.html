@@ -41,16 +41,20 @@
 
 {% if request.user.is_client %}
 <h6 class="badge badge-pill badge-dark">Client Dashboard</h6> <br> <br>
+    {% if user.is_client %}
+    <a href="{% url 'add_project' %}" class="btn btn-outline-primary">Add Project</a> <br><br>
+    {% endif %}
     {% for p in posted_by %}
     {% if request.user == p.user %}
     <div class="card">
         <div class="card-body">
         <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.title }}</a></h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ p.resources }}</h6>
-        <h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6>
+        <a href="{% url 'company' p.company %}"><h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6></a>
         <p class="card-text">{{ p.description|safe|slice:":255" }}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
         <p class="card-text">Project by: <b>{{ p.user.first_name }} {{ p.user.last_name }}</b></p>
-        <small><i class="material-icons" style="font-size:16px">place</i> {{ p.location }} <br> <i>Posted on: {{ p.timestamp }}</i></small>
+        <a href="{% url 'tags' p.industry %}"><h6><span class="badge bg-secondary">{{ p.industry }}</span></h6></a>
+        <small><i class="material-icons" style="font-size:16px">place</i><a href="{% url 'location' p.location %}"> {{ p.location }}</a> <br> <i>Posted on: {{ p.timestamp }}</i></small>
         <p>Interests registered by: </p>
         {% for a in p.interests.all %}
         {% if a.is_student %}

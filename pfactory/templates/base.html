@@ -29,9 +29,9 @@
 	</button>
 	<!-- Collection of nav links, forms, and other content for toggling -->
 	<div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">		
-		<form class="navbar-form form-inline">
+		<form class="navbar-form form-inline" action="/search/">
 			<div class="input-group search-box">								
-				<input type="text" id="search" class="form-control" placeholder="Search here...">
+				<input type="text" id="search" class="form-control" placeholder="Search here..." name="q" value="{{ query }}" required>
 				<span class="input-group-addon"><i class="material-icons">&#xE8B6;</i></span>
 			</div>
 		</form>

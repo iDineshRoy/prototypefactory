@@ -28,14 +28,22 @@ def add_project(request):
     context["msg"] = "Project addded successfully!"
     return render(request, "add_project.html", context)
 
+def update_project(request, id):
+    project = Project.objects.get(id=id)
+    form = ProjectModelForm(request.POST or None, instance=project)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.user = request.user
+        obj.save()
+        return redirect('show_project', id)
+    context = { 'form': form }
+    context["msg"] = "Project addded successfully!"
+    return render(request, "add_project.html", context)
+
 def register_interest(request, p_id):
     obj = get_object_or_404(Project, pk=p_id)
     if obj.status == "open":
         obj.status = "registered interest"
-    # if obj.interests.filter(id=request.user.id).exists():
-    #     obj.interests.remove(request.user)
-    # else:
-    #     obj.likes.add(request.user)
         obj.interests.add(request.user)
     obj.save(update_fields=["status"])
     projects = get_list_or_404(Project, pk=p_id)
@@ -44,13 +52,9 @@ def register_interest(request, p_id):
 def show_profile(request, id):
     obj = Project.objects.filter(interests=request.user)
     posted_by = Project.objects.filter(user=request.user)
-    # client = get_object_or_404(Project, interests=request.user)
-    # interests = client.interests.all()
-    # print(interests)
     context = {}
     context["projects"] = obj
     context["posted_by"] = posted_by
-    # context["interests"] = interests
     return render(request, "profile.html", context)
 
 def approve_to_work(request, p_id):
@@ -79,4 +83,12 @@ def initiate_work(request, p_id):
 
 def view_tag_industry(request, ind):
     projects = Project.objects.filter(industry=ind).distinct()[:10]
+    return render(request, "projects.html", { "projects": projects })
+
+def view_tag_company(request, comp):
+    projects = Project.objects.filter(company=comp).distinct()[:10]
+    return render(request, "projects.html", { "projects": projects })
+
+def view_tag_location(request, loc):
+    projects = Project.objects.filter(location=loc).distinct()[:10]
     return render(request, "projects.html", { "projects": projects })
