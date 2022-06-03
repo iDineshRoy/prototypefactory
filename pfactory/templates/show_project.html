@@ -5,19 +5,20 @@
   <div class="container">
       <br>
 {% if user.is_client %}
-<div class="d-grid gap-2">
-  <a href="{% url 'add_project' %}" class="btn btn-primary" tabindex="-1" role="button">Add Project</a>
-</div>
+  <a href="{% url 'add_project' %}" class="btn btn-outline-primary">Add Project</a> <a href="{% url 'profile' request.user.id %}" class="btn btn-outline-success">My Dashboard</a>
 {% endif %}
-<br>
+<br><br>
 
 {% if p %}
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.id }}: {{ p.title }}</a></h5>
+      <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.title }}</a></h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ p.resources }}</h6>
+      <h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6>
       <p class="card-text">{{ p.description|safe }}</p>
-      <p class="card-text">Project by: {{ p.user.first_name }} {{ p.user.last_name }}</p>
-      <p class="card-text">Posted on: {{ p.timestamp }}</p>
+      <p class="card-text">Project by: <b>{{ p.user.first_name }} {{ p.user.last_name }}</b></p>
+      <a href="{% url 'tags' p.industry %}"><h6><span class="badge bg-secondary">{{ p.industry }}</span></h6></a>
+      <small><i class="material-icons" style="font-size:16px">place</i> {{ p.location }} <br> <i>Posted on: {{ p.timestamp }}</i></small>
       {% if request.user.is_student  %}
       {% if p.status == "open" %}
       <a href="{% url 'register_interest' p.id %}" class="btn btn-primary">Register Interest</a>

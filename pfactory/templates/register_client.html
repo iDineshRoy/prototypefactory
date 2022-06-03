@@ -9,7 +9,7 @@
         <form class="text-center border border-light p-5" method="POST" action="">
             {% csrf_token %}
 
-            <p class="h4 mb-4">Sign up as a <b>student</b></p>
+            <p class="h4 mb-4">Sign up</p>
             {{ form.username }}
             {% if form.username.errors %}
             <span class="help-block">{{ form.username.errors.0 }}</span>
@@ -40,8 +40,6 @@
             {% endif %}
             <br>
             <button class="btn btn-primary" type="submit">Register</button>
-            <br>
-            <p>Register as a <a href="{% url 'register_client' %}">client</a> here</p>
             <hr>
 
             <!-- Terms of service -->

@@ -15,16 +15,25 @@ def register(request):
         firstname = request.POST['firstname']
         lastname = request.POST['lastname']
         email = request.POST['email']
-        try:
-            is_client = request.POST['is_client']
-            is_client = True
-        except:
-            is_client = False
-        try:
-            is_student = request.POST['is_student']
-            is_student = True
-        except:
-            is_student = False
+        is_client = False
+        is_student = True
+        obj=User.objects.create_user(username=username, password=password1, email=email, first_name=firstname.title(), last_name=lastname.title(), is_student=is_student, is_client=is_client)
+        obj.save()
+        update_session_auth_hash(request, request.user)
+        return redirect("/")
+    context = {"title": "Registration Form", "form": form}
+    return render(request, 'register.html', context)
+
+def register_client(request):
+    form = SignUpForm(request.POST or None)
+    if form.is_valid():
+        username = request.POST['username']
+        password1 = request.POST['password1']
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
+        email = request.POST['email']
+        is_client = True
+        is_student = False
         obj=User.objects.create_user(username=username, password=password1, email=email, first_name=firstname.title(), last_name=lastname.title(), is_student=is_student, is_client=is_client)
         obj.save()
         update_session_auth_hash(request, request.user)

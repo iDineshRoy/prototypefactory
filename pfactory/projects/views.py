@@ -5,10 +5,12 @@ from .forms import ProjectModelForm
 
 # Create your views here.
 def homepage(request):
-    return render(request, "base.html", {})
+    a = Project.objects.all().count()
+    projects = Project.objects.order_by('?')[:3]
+    return render(request, "base.html", { "number": a, "projects": projects })
 
 def view_projects(request):
-    projects = Project.objects.all().order_by('-id')[:4]
+    projects = Project.objects.all().order_by('-id')[:10]
     return render(request, "projects.html", { "projects": projects })
 
 def view_project(request, id):
@@ -21,7 +23,7 @@ def add_project(request):
         obj = form.save(commit=False)
         obj.user = request.user
         obj.save()
-        return redirect('/')
+        return redirect('show_projects')
     context = { 'form': form }
     context["msg"] = "Project addded successfully!"
     return render(request, "add_project.html", context)
@@ -73,4 +75,8 @@ def initiate_work(request, p_id):
         obj.status = "work in progress"
     obj.save(update_fields=["status"])
     projects = get_list_or_404(Project, pk=p_id)
+    return render(request, "projects.html", { "projects": projects })
+
+def view_tag_industry(request, ind):
+    projects = Project.objects.filter(industry=ind).distinct()[:10]
     return render(request, "projects.html", { "projects": projects })

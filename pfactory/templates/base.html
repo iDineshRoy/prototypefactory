@@ -36,7 +36,7 @@
 			</div>
 		</form>
 		<div class="navbar-nav ml-auto">
-			<a href="{% url 'home' %}" class="nav-item nav-link active"><i class="fa fa-home"></i><span>Home</span></a>
+			<a href="{% url 'home' %}" class="nav-item nav-link"><i class="fa fa-home"></i><span>Home</span></a>
 			<a href="{% url 'show_projects' %}" class="nav-item nav-link"><i class="fa fa-gears"></i><span>Projects</span></a>
 			<a href="#" class="nav-item nav-link"><i class="fa fa-envelope"></i><span>Messages</span></a>		
 			<a href="#" class="nav-item nav-link"><i class="fa fa-bell"></i><span>Notifications</span></a>
@@ -66,8 +66,10 @@
 		</div>
 	</div>
 </nav>
-<link href="{% static '/css/nav.css' %}"" rel="stylesheet" crossorigin="anonymous">
-<link href="{% static '/css/carousel.css' %}"" rel="stylesheet" crossorigin="anonymous">
+<link href="{% static '/css/nav.css' %}" rel="stylesheet" crossorigin="anonymous">
+<link href="{% static '/css/carousel.css' %}" rel="stylesheet" crossorigin="anonymous">
+<link href="{% static '/css/main-new.css' %}" rel="stylesheet">
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 {% block content %}
 
 {% if msg %}
@@ -87,36 +89,63 @@
 {% endif %}
 
 <div class="container-lg">
-	<div class="row">
+	<!-- <div class="row">
 		<div class="col-md-12">
 			<div id="myCarousel" class="carousel slide" data-ride="carousel">
-				<!-- Wrapper for carousel items -->
+				
 				<div class="carousel-inner">
 					<div class="carousel-item active">
 						<img src="{% static 'images/Find Talents.png' %}" class="img-fluid" alt="Tablet">
 						<div class="carousel-caption">
-							<!-- <h3>Live Monitoring Tools</h3>							
-							<p>Nullam hendrerit justo non leo aliquet imperdiet. Etiam sagittis lectus condime dapibus vitae.</p> -->
+							
 						</div>
 					</div>
 					<div class="carousel-item">
 						<img src="{% static 'images/Search Project.png' %}" class="img-fluid" alt="Tablet">
 						<div class="carousel-caption">
-							<!-- <h3>Attractive Pricing</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam pellentesque tempor quis.</p> -->
+							
 						</div>
 					</div>
 					<div class="carousel-item">
 						<img src="{% static 'images/Search Project.png' %}" class="img-fluid" alt="Tablet">
 						<div class="carousel-caption">
-							<!-- <h3>Award Winning Support</h3>
-							<p>Nullam hendrerit justo non leo aliquet imperdiet. Etiam in sagittis lectus ultrices placerat.</p> -->
+							
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
+	<div class="card mt-5 p-4">
+		<h3>Connecting industries to students...</h3>
+		
+		<div class="input-group mb-3">
+			<input type="text" class="form-control" placeholder="Search the projects that you are interested to work on...">
+			<div class="input-group-append"><button class="btn btn-primary"><i class='fas fa-search'></i></button></div>
+		</div>
+		
+		{% for p in projects %}
+		{% if p.industry %}
+			
+			<a href="{% url 'tags' p.industry %}"><span class="badge bg-secondary">{{ p.industry.strip|safe }}</span></a>
+
+		{% endif %}
+		{% endfor %}
+		
+		<span class="text mb-4">{{ number }} projects... </span>
+		{% for p in projects %}
+		<div class="d-flex flex-row justify-content-between mb-3">
+			<a href="{% url 'show_project' p.id %}">
+			<div class="d-flex flex-column p-3"><p class="mb-1">{{ p.title }}</p> <small class="text-muted">{{ p.resources }}</small>
+			</div>
+			<div class="price pt-3 pl-3">
+				<a href="{% url 'show_project' p.id %}"><span class="mb-2">View</span></a>
+				<!-- <h5><span>&dollar;</span>1,500</h5> -->
+			</div>
+			</a>
+		</div>
+		{% endfor %}
+	</div>	
 </div>
 
 
