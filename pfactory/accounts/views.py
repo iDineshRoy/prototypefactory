@@ -39,7 +39,7 @@ def register_client(request):
         update_session_auth_hash(request, request.user)
         return redirect("/")
     context = {"title": "Registration Form", "form": form}
-    return render(request, 'register.html', context)
+    return render(request, 'register_client.html', context)
 
 def register_new(request):
     msg = None

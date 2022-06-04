@@ -2,6 +2,7 @@ from django.shortcuts import get_list_or_404, render, redirect, get_object_or_40
 
 from .models import Project
 from .forms import ProjectModelForm
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 # Create your views here.
 def homepage(request):
@@ -10,8 +11,19 @@ def homepage(request):
     return render(request, "base.html", { "number": a, "projects": projects })
 
 def view_projects(request):
-    projects = Project.objects.all().order_by('-id')[:10]
-    return render(request, "projects.html", { "projects": projects })
+    obj_list = Project.objects.all().order_by('-id')
+    num = len(obj_list)
+    paginator = Paginator(obj_list,5)
+    try:
+        page = int(request.GET.get('page','1'))
+    except:
+        page = 1
+    try:
+        obj = paginator.page(page)
+    except(EmptyPage, InvalidPage):
+        obj = paginator.page(paginator.num_pages)
+    context = {"projects":obj, "number":num}
+    return render(request, "projects.html", context)
 
 def view_project(request, id):
     project = get_object_or_404(Project, id=id)
