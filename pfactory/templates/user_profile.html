@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div class="container">
+      <br>
+        {% if request.user %}
+        <span class="badge badge-pill badge-dark">User Profile</span> <br> <br>
+            {% if user_profile %}
+
+            <div class="container mt-5">
+    
+                <div class="row d-flex justify-content-center">
+                    
+                    <div class="col-md-7">
+                        
+                        <div class="card p-3 py-4">
+                            
+                            <div class="text-center">
+                                <img src="{{ 'user_profile.photo.url' }}" width="100" class="rounded-circle">
+                            </div>
+                            
+                            <div class="text-center mt-3">
+                                <span class="bg-secondary p-1 px-4 rounded text-white">{% if user_profile.is_client %}Client{% elif user_profile.is_student %}Student{% endif %}</span>
+                                <h5 class="mt-2 mb-0">{{ user_profile.first_name }} {{ user_profile.first_name }}</h5>
+                                <span>{{ user_profile.specialization }}</span>
+                                
+                                <div class="px-4 mt-1">
+                                    <p class="fonts">✉️: {{ user_profile.email }}</p>
+                                    <p class="fonts">📞: +61-{{ user_profile.phone }}</p>
+                                    <p class="fonts">🎓: {{ user_profile.university }}</p>
+                                
+                                </div>
+                                
+                                <!-- <ul class="social-list">
+                                    <li><i class="fa fa-facebook"></i></li>
+                                    <li><i class="fa fa-dribbble"></i></li>
+                                    <li><i class="fa fa-instagram"></i></li>
+                                    <li><i class="fa fa-linkedin"></i></li>
+                                    <li><i class="fa fa-google"></i></li>
+                                </ul> -->
+                                
+                                <div class="buttons">
+                                    
+                                    <button class="btn btn-outline-primary px-4">Message</button>
+                                    <button class="btn btn-primary px-4 ms-3">Contact</button>
+                                </div>
+                                
+                                
+                            </div>
+                            
+                        
+                            
+                            
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                
+            </div>
+
+            {% endif %}
+        {% endif %}
+
+
+
+</div>
+{% endblock %}

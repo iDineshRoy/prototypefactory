@@ -62,8 +62,8 @@ def register_interest(request, p_id):
     return render(request, "projects.html", { "projects": projects })
 
 def show_profile(request, id):
-    obj = Project.objects.filter(interests=request.user)
-    posted_by = Project.objects.filter(user=request.user)
+    obj = Project.objects.filter(interests=request.user).order_by('-id')
+    posted_by = Project.objects.filter(user=request.user).order_by('-id')
     context = {}
     context["projects"] = obj
     context["posted_by"] = posted_by

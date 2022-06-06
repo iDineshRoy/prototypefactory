@@ -15,22 +15,26 @@ def search_view(request):
                 Q(company__icontains=q) |
                 Q(description__icontains=q) | 
                 Q(title__icontains=q) | 
-                Q(resources__icontains=q) |
+                Q(technology__icontains=q) |
                 Q(location__icontains=q) |
                 Q(timestamp__icontains=q) |
                 Q(user__first_name__icontains=q) |
-                Q(user__last_name__icontains=q) 
+                Q(user__last_name__icontains=q) |
+                Q(interests__first_name__icontains=q) |
+                Q(interests__last_name__icontains=q)
                 for q in queries])
             qset_or = functools.reduce(operator.or_, [
                 Q(industry__icontains=q) | 
                 Q(company__icontains=q) |
                 Q(description__icontains=q) | 
                 Q(title__icontains=q) | 
-                Q(resources__icontains=q) |
+                Q(technology__icontains=q) |
                 Q(location__icontains=q) |
                 Q(timestamp__icontains=q) |
                 Q(user__first_name__icontains=q) |
-                Q(user__last_name__icontains=q) 
+                Q(user__last_name__icontains=q) |
+                Q(interests__first_name__icontains=q) |
+                Q(interests__last_name__icontains=q)
                 for q in queries])
             obj_list = []
             obj_list.extend(list(Project.objects.filter(qset_and).order_by('-id')))

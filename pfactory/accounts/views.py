@@ -7,8 +7,8 @@ from django.contrib.auth import logout, authenticate, login, update_session_auth
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-def register(request):
-    form = SignUpForm(request.POST or None)
+def register_student(request):
+    form = SignUpForm(request.POST, request.FILES or None)
     if form.is_valid():
         username = request.POST['username']
         password1 = request.POST['password1']
@@ -17,26 +17,40 @@ def register(request):
         email = request.POST['email']
         is_client = False
         is_student = True
-        obj=User.objects.create_user(username=username, password=password1, email=email, first_name=firstname.title(), last_name=lastname.title(), is_student=is_student, is_client=is_client)
+        phone = request.POST['phone']
+        address = request.POST['address']
+        specialization = request.POST['specialization']
+        university = request.POST['university']
+        photo = request.POST['photo']
+        obj=User.objects.create_user(username=username, password=password1, email=email, first_name=firstname.title(), last_name=lastname.title(), is_student=is_student, is_client=is_client, phone=phone, address=address, specialization=specialization, university=university, photo=photo)
         obj.save()
         update_session_auth_hash(request, request.user)
         return redirect("/")
     context = {"title": "Registration Form", "form": form}
     return render(request, 'register.html', context)
 
-def register_client(request):
-    form = SignUpForm(request.POST or None)
+def register(request):
+    form = SignUpForm(request.POST, request.FILES)
     if form.is_valid():
-        username = request.POST['username']
-        password1 = request.POST['password1']
-        firstname = request.POST['firstname']
-        lastname = request.POST['lastname']
-        email = request.POST['email']
-        is_client = True
-        is_student = False
-        obj=User.objects.create_user(username=username, password=password1, email=email, first_name=firstname.title(), last_name=lastname.title(), is_student=is_student, is_client=is_client)
+        obj = form.save(commit=False)
+        obj.is_client = False
+        obj.is_student = True
+        obj.first_name = (request.POST['firstname']).title()
+        obj.last_name = (request.POST['lastname']).title()
         obj.save()
-        update_session_auth_hash(request, request.user)
+        return redirect("/")
+    context = {"title": "Registration Form", "form": form}
+    return render(request, 'register.html', context)
+
+def register_client(request):
+    form = SignUpForm(request.POST, request.FILES)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.is_client = True
+        obj.is_student = False
+        obj.first_name = (request.POST['firstname']).title()
+        obj.last_name = (request.POST['lastname']).title()
+        obj.save()
         return redirect("/")
     context = {"title": "Registration Form", "form": form}
     return render(request, 'register_client.html', context)
@@ -95,3 +109,21 @@ def changepassword(request):
         form = PasswordChangeForm(request.user)
     context = {"form":form}
     return render(request, 'changepassword.html', context)
+
+def update_student(request, id):
+    form = SignUpForm(request.POST, request.FILES)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.is_client = False
+        obj.is_student = True
+        obj.first_name = (request.POST['firstname']).title()
+        obj.last_name = (request.POST['lastname']).title()
+        obj.save()
+        return redirect("/")
+    context = {"title": "Registration Form", "form": form}
+    return render(request, 'register.html', context)
+
+def show_user(request, id):
+    user = User.objects.get(id=id)
+    context = {"title": "User Profile", "user_profile": user}
+    return render(request, 'user_profile.html', context)

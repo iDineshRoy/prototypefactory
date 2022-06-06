@@ -52,7 +52,7 @@ class Project(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, null=True)
     description = RichTextField()
-    resources = models.CharField(max_length=200, null=True)
+    technology = models.CharField(max_length=200, null=True)
     status = models.CharField(max_length=50, null=True, default="open")
     location = models.CharField(max_length=50, null=True, choices=STATE_CHOICES)
     industry = models.CharField(max_length=50, null=True, choices=INDUSTRY_CHOICES)

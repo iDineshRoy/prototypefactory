@@ -18,10 +18,14 @@ class SignUpForm(UserCreationForm):
     lastname = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Last Name"}))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':"form-control", 'placeholder':"Password"}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':"form-control", 'placeholder':"Re-enter Password"}))
-
+    phone = forms.CharField(widget=forms.NumberInput(attrs={'class':"form-control", 'placeholder':"Phone"}))
+    address = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Address"}))
+    university = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"University"}))
+    education = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Education"}))
+    specialization = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Specialization"}))
     class Meta:
         model = UserModel
-        fields = ['username', 'email', 'firstname', 'lastname','password1', 'password2', 'is_student', 'is_client']
+        fields = ['username', 'email', 'firstname', 'lastname','password1', 'password2', 'is_student', 'is_client', 'phone', 'address', 'education', 'specialization', 'university', 'photo']
 
 class RegistrationForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Username"}))

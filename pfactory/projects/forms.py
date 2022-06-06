@@ -7,8 +7,8 @@ class ProjectModelForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Title"}))
     # location = forms.ChoiceField()
     company = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Company"}))
-    resources = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Resources"}))
+    technology = forms.CharField(widget=forms.TextInput(attrs={'class':"form-control", 'placeholder':"Technologies"}))
     
     class Meta:
         model = Project
-        fields = ["title", "description", "location","industry","company", "resources"]
+        fields = ["title", "description", "location","industry","company", "technology"]

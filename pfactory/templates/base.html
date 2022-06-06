@@ -38,8 +38,7 @@
 		</form>
 		<div class="navbar-nav ml-auto">
 			<a href="{% url 'home' %}" class="nav-item nav-link"><i class="fa fa-home"></i><span>Home</span></a>
-			<a href="{% url 'show_projects' %}" class="nav-item nav-link"><i class="fa fa-gears"></i><span>Projects</span></a>
-			<a href="#" class="nav-item nav-link"><i class="fa fa-envelope"></i><span>Messages</span></a>		
+			<a href="{% url 'show_projects' %}" class="nav-item nav-link"><i class="fa fa-gears"></i><span>Projects</span></a>		
 			<a href="#" class="nav-item nav-link"><i class="fa fa-bell"></i><span>Notifications</span></a>
 			<div class="nav-item dropdown">
 				
@@ -50,6 +49,7 @@
 				{% endif %}
 					<div class="dropdown-menu">
 						{% if user.is_authenticated %}
+						<a href="{% url 'show_user' request.user.id %}" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a>
 						<a href="{% url 'profile' request.user.id %}" class="dropdown-item"><i class="fa fa-user-o"></i> Dashboard</a>
 						{% else %}
 						<a href="{% url 'login' %}" class="dropdown-item"><b class="fa fa-user-o"></b> Login</a>
@@ -139,7 +139,7 @@
 		{% for p in projects %}
 		<div class="d-flex flex-row justify-content-between mb-3">
 			<a href="{% url 'show_project' p.id %}">
-			<div class="d-flex flex-column p-3"><p class="mb-1">{{ p.title }}</p> <small class="text-muted">{{ p.resources }}</small>
+			<div class="d-flex flex-column p-3"><p class="mb-1">{{ p.title }}</p> <small class="text-muted">{{ p.technology }}</small>
 			</div>
 			<div class="price pt-3 pl-3">
 				<a href="{% url 'show_project' p.id %}"><span class="mb-2">View</span></a>

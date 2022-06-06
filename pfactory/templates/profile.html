@@ -11,11 +11,12 @@
     <div class="card">
         <div class="card-body">
         <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.title }}</a></h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ p.resources }}</h6>
-        <h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6>
-        <p class="card-text">{{ p.description|safe|slice:":255" }}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
-        <p class="card-text">Project by: <b>{{ p.user.first_name }} {{ p.user.last_name }}</b></p>
-        <small><i class="material-icons" style="font-size:16px">place</i> {{ p.location }} <br> <i>Posted on: {{ p.timestamp }}</i></small>
+        <h6 class="card-subtitle mb-2 text-muted">{{ p.technology }}</h6>
+        <a href="{% url 'company' p.company %}"><h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6></a>
+        <p class="card-text">{% autoescape off %}{{ p.description|safe|truncatechars_html:255 }}{% endautoescape %}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
+        <p class="card-text">Project by: <a href="{% url 'show_user' p.user.id %}"><b>{{ p.user.first_name }} {{ p.user.last_name }}</b></a></p>
+        <a href="{% url 'tags' p.industry %}"><h6><span class="badge bg-secondary">{{ p.industry }}</span></h6></a>
+        <small><i class="material-icons" style="font-size:16px">place</i> <a href="{% url 'location' p.location %}">{{ p.location }}</a> <br> <i>Posted on: {{ p.timestamp }}</i></small>
         {% if request.user.is_student  %}
         {% if p.status == "registered interest" %}
         <div class="alert alert-info" role="alert">
@@ -49,22 +50,28 @@
     <div class="card">
         <div class="card-body">
         <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.title }}</a></h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ p.resources }}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{ p.technology }}</h6>
         <a href="{% url 'company' p.company %}"><h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6></a>
-        <p class="card-text">{{ p.description|safe|slice:":255" }}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
-        <p class="card-text">Project by: <b>{{ p.user.first_name }} {{ p.user.last_name }}</b></p>
+        <p class="card-text">{% autoescape off %}{{ p.description|safe|truncatechars_html:255 }}{% endautoescape %}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
+        <p class="card-text">Project by: <a href="{% url 'show_user' p.user.id %}"><b>{{ p.user.first_name }} {{ p.user.last_name }}</b></a></p>
         <a href="{% url 'tags' p.industry %}"><h6><span class="badge bg-secondary">{{ p.industry }}</span></h6></a>
-        <small><i class="material-icons" style="font-size:16px">place</i><a href="{% url 'location' p.location %}"> {{ p.location }}</a> <br> <i>Posted on: {{ p.timestamp }}</i></small>
-        <p>Interests registered by: </p>
-        {% for a in p.interests.all %}
-        {% if a.is_student %}
-        <p class="card-text"><b>{{ a.first_name }} {{ a.last_name }}</b></p> &nbsp;
-        {% endif %}
-        {% endfor %}
-        
-        {% if p.status == "registered interest" %}
-        <a href="{% url 'approve' p.id %}" class="btn btn-success">Approve</a> &nbsp; <a href="{% url 'deny' p.id %}" class="btn btn-danger">Deny</a>
-        {% endif%}
+        <small><i class="material-icons" style="font-size:16px">place</i> <a href="{% url 'location' p.location %}">{{ p.location }}</a> <br> <i>Posted on: {{ p.timestamp }}</i></small>
+        <div class="alert alert-primary" role="alert">
+            <p>Interests registered by: </p>
+            {% for a in p.interests.all %}
+            {% if a.is_student %}
+            <a href="{% url 'show_user' a.id %}"><small><b>{{ a.first_name }} {{ a.last_name }}</b></small><br></a>
+            {% endif %}
+            {% endfor %}
+            
+            {% if p.status == "registered interest" %}
+            <a href="{% url 'approve' p.id %}" class="btn btn-success">Approve</a> &nbsp; <a href="{% url 'deny' p.id %}" class="btn btn-danger">Deny</a>
+            {% elif p.status == "work in progress" %}
+            <div class="alert alert-success" role="alert">
+                <small> has started working on the project!</small>
+            </div>
+            {% endif%}
+        </div>
         </div>
     </div>
     <br>
