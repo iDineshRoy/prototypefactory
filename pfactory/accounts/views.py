@@ -3,9 +3,12 @@ from .forms import RegistrationForm, SignUpForm, UserLoginForm
 from django.contrib.auth.forms import PasswordChangeForm
 # from django.contrib.auth.models import User, auth
 from django.contrib.auth import logout, authenticate, login, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
+
+from .models import User as UserProfile
 
 def register_student(request):
     form = SignUpForm(request.POST, request.FILES or None)
@@ -111,18 +114,23 @@ def changepassword(request):
     return render(request, 'changepassword.html', context)
 
 def update_student(request, id):
-    form = SignUpForm(request.POST, request.FILES)
+    obj = UserProfile.objects.get(id=request.user.id)
+    user_obj = request.user
+    form = SignUpForm(request.POST, request.FILES, instance=obj)
     if form.is_valid():
         obj = form.save(commit=False)
+        form.user = request.user
         obj.is_client = False
         obj.is_student = True
         obj.first_name = (request.POST['firstname']).title()
         obj.last_name = (request.POST['lastname']).title()
         obj.save()
-        return redirect("/")
+        update_session_auth_hash(request, user_obj)
+        return redirect("show_user", id)
     context = {"title": "Registration Form", "form": form}
     return render(request, 'register.html', context)
 
+@login_required
 def show_user(request, id):
     user = User.objects.get(id=id)
     context = {"title": "User Profile", "user_profile": user}

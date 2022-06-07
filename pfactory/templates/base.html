@@ -155,4 +155,48 @@
 
 {% endblock %}
 </body>
+
+<!-- Footer -->
+    <!-- Site footer -->
+	<br><br>
+      <footer class="site-footer">
+        <div class="container">
+			<hr>
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <h6>About</h6>
+              <p class="text-justify"><b>Prototype Factory</b> is all about the bringing the students and industries together for collaborations! Prototype Factory is an Employability.Life product where the students can choose from several projects that they want to work on.</p>
+			  <p><img src="{% static 'images/elife.png' %}" alt=""> Connecting Employers & Learners to gain skills advantage!</p>
+            </div>
+
+            <div class="col-xs-6 col-md-3">
+              <h6>Categories</h6>
+              <ul class="footer-links">
+				  {% for p in projects %}
+                <li><a href="{% url 'technology' p.technology %}">{{ p.technology }}</a></li>
+				{% endfor %}
+              </ul>
+            </div>
+
+            <div class="col-xs-6 col-md-3">
+              <h6>Quick Links</h6>
+              <ul class="footer-links">
+                <li><a href="http://scanfcode.com/about/">About Us</a></li>
+                <li><a href="http://scanfcode.com/contact/">Contact Us</a></li>
+                <li><a href="http://scanfcode.com/privacy-policy/">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          <hr>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+              <p class="copyright-text">Copyright &copy; 2022 All Rights Reserved by 
+           <a href="https://employability.life/">Employability.Life</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+  </footer>
 </html>

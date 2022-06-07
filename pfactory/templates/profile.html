@@ -6,6 +6,7 @@
       <br>
 {% if request.user.is_student %}
 <span class="badge badge-pill badge-dark">Student Dashboard</span> <br> <br>
+<a href="{% url 'show_user' request.user.id %}" class="btn btn-outline-success">My Profile</a><br><br>
     {% if projects %}
     {% for p in projects %}
     <div class="card">

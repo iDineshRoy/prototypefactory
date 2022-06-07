@@ -23,7 +23,7 @@
       <a href="{% url 'tags' p.industry %}"><h6><span class="badge bg-secondary">{{ p.industry }}</span></h6></a>
       <small><i class="material-icons" style="font-size:16px">place</i> <a href="{% url 'location' p.location %}">{{ p.location }}</a> <br> <i>Posted on: {{ p.timestamp }}</i></small>
       
-      {% if request.user.is_student  %}
+      {% if request.user.is_student %}
       {% if p.status == "open" %}
       <a href="{% url 'register_interest' p.id %}" class="btn btn-primary">Register Interest</a>
       {% elif p.status == "registered interest" %}

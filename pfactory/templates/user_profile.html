@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+{% load static %}
   <div class="container">
       <br>
         {% if request.user %}
         <span class="badge badge-pill badge-dark">User Profile</span> <br> <br>
+        <a href="{% url 'profile' request.user.id %}" class="btn btn-outline-success">My Dashboard</a>
             {% if user_profile %}
 
             <div class="container mt-5">
@@ -17,18 +18,22 @@
                         <div class="card p-3 py-4">
                             
                             <div class="text-center">
-                                <img src="{{ 'user_profile.photo.url' }}" width="100" class="rounded-circle">
+                                {% if user_profile.photo %}<img src="{{ user_profile.photo.url }}" width="100" class="rounded-circle">{% else %}<img src="{% static 'images/elife.png' %}" width="100" class="rounded-circle">{% endif %}
                             </div>
                             
                             <div class="text-center mt-3">
                                 <span class="bg-secondary p-1 px-4 rounded text-white">{% if user_profile.is_client %}Client{% elif user_profile.is_student %}Student{% endif %}</span>
-                                <h5 class="mt-2 mb-0">{{ user_profile.first_name }} {{ user_profile.first_name }}</h5>
-                                <span>{{ user_profile.specialization }}</span>
-                                
+                                <h5 class="mt-2 mb-0">{{ user_profile.first_name }} {{ user_profile.last_name }}</h5>
+                                <span>{{ user_profile.specialization }}</span><br>
+                                <span><i class="material-icons" style="font-size:16px">place</i> <a href="{% url 'location' user_profile.address %}">{{ user_profile.address }}</a> </span>
+                                <hr>
                                 <div class="px-4 mt-1">
                                     <p class="fonts">✉️: {{ user_profile.email }}</p>
                                     <p class="fonts">📞: +61-{{ user_profile.phone }}</p>
+                                    <p class="fonts">🏫: {{ user_profile.education }}</p>
                                     <p class="fonts">🎓: {{ user_profile.university }}</p>
+                                    
+                                    
                                 
                                 </div>
                                 
@@ -41,9 +46,11 @@
                                 </ul> -->
                                 
                                 <div class="buttons">
-                                    
-                                    <button class="btn btn-outline-primary px-4">Message</button>
-                                    <button class="btn btn-primary px-4 ms-3">Contact</button>
+                                    {% if request.user == user_profile %}
+                                    <a href="{% url 'update_student' request.user.id %}" class="btn btn-outline-primary">Update</a>
+                                    {% endif %}
+
+                                    <a href="mailto:{{ user_profile.email }}" class="btn btn-primary">Contact</a>
                                 </div>
                                 
                                 

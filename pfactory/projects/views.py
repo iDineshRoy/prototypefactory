@@ -54,7 +54,7 @@ def update_project(request, id):
 
 def register_interest(request, p_id):
     obj = get_object_or_404(Project, pk=p_id)
-    if obj.status == "open":
+    if obj.status == "open" or "register_interest":
         obj.status = "registered interest"
         obj.interests.add(request.user)
     obj.save(update_fields=["status"])
@@ -103,4 +103,8 @@ def view_tag_company(request, comp):
 
 def view_tag_location(request, loc):
     projects = Project.objects.filter(location=loc).distinct()[:10]
+    return render(request, "projects.html", { "projects": projects })
+
+def view_tag_technology(request, tec):
+    projects = Project.objects.filter(technology=tec).distinct()[:10]
     return render(request, "projects.html", { "projects": projects })
