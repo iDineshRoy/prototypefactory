@@ -8,43 +8,47 @@
 <span class="badge badge-pill badge-dark">Student Dashboard</span> <br> <br>
 <a href="{% url 'show_user' request.user.id %}" class="btn btn-outline-success">My Profile</a><br><br>
     {% if projects %}
-    {% for p in projects %}
-    <div class="card">
-        <div class="card-body">
-        <h5 class="card-title"><a href="{% url 'show_project' p.id %}" class="card-link">{{ p.title }}</a></h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ p.technology }}</h6>
-        <a href="{% url 'company' p.company %}"><h6 class="card-subtitle mb-2 text-muted">{{ p.company }}</h6></a>
-        <p class="card-text">{% autoescape off %}{{ p.description|safe|truncatechars_html:255 }}{% endautoescape %}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
-        <p class="card-text">Project by: <a href="{% url 'show_user' p.user.id %}"><b>{{ p.user.first_name }} {{ p.user.last_name }}</b></a></p>
-        <a href="{% url 'tags' p.industry %}"><h6><span class="badge bg-secondary">{{ p.industry }}</span></h6></a>
-        <small><i class="material-icons" style="font-size:16px">place</i> <a href="{% url 'location' p.location %}">{{ p.location }}</a> <br> <i>Posted on: {{ p.timestamp }}</i></small>
-        {% if request.user.is_student  %}
-        {% if p.status == "registered interest" %}
-        <div class="alert alert-info" role="alert">
-        Awaiting approval...
+        {% for p in projects %}
+        <div class="card">
+            <div class="card-body">
+            <h5 class="card-title"><a href="{% url 'show_project' p.project.id %}" class="card-link">{{ p.project.title }}</a></h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ p.project.technology }}</h6>
+            <a href="{% url 'company' p.project.company %}"><h6 class="card-subtitle mb-2 text-muted">{{ p.project.company }}</h6></a>
+            <p class="card-text">{% autoescape off %}{{ p.project.description|safe|truncatechars_html:255 }}{% endautoescape %}... <a href="{% url 'show_project' p.id %}" class="card-link">Show More</a></p>
+            <p class="card-text">Project by: <a href="{% url 'show_user' p.project.user.id %}"><b>{{ p.project.user.first_name }} {{ p.project.user.last_name }}</b></a></p>
+            <a href="{% url 'tags' p.project.industry %}"><h6><span class="badge bg-secondary">{{ p.project.industry }}</span></h6></a>
+            <small><i class="material-icons" style="font-size:16px">place</i> <a href="{% url 'location' p.project.location %}">{{ p.project.location }}</a> <br> <i>Posted on: {{ p.project.timestamp }}</i></small>
+            {% if request.user.is_student  %}
+                {% if p.status == "registered interest" %}
+                    <div class="alert alert-info" role="alert">
+                        Awaiting approval...
+                    </div>
+                {% elif p.status == "open" %}
+                    <div class="alert alert-primary" role="alert">
+                        Your request has been denied.
+                    </div>
+                {% elif p.status == "approved" %}
+                    <div class="alert alert-success" role="alert">
+                        Congratulations! Your interest has been approved by the client. <br> You can start working on your project!
+                    </div>
+                    <a href="{% url 'initiate_work' p.project.id %}" class="btn btn-success">Start Working</a>
+                {% elif p.status == "work in progress" %}
+                    <div class="alert alert-success" role="alert">
+                        Great! <br> It's awesome to work on the project you're interested in. <br>Feel free to shoot the questions if you have any, for the client.
+                    </div>
+                {% endif%}
+            {% endif%}
+            </div>
         </div>
-        {% elif p.status == "approved" %}
-        <div class="alert alert-success" role="alert">
-        Congratulations! Your interest has been approved by the client. <br> You can start working on your project!
-        </div>
-        <a href="{% url 'initiate_work' p.id %}" class="btn btn-success">Start Working</a>
-        {% elif p.status == "work in progress" %}
-        <div class="alert alert-success" role="alert">
-        Great! <br> It's awesome to work on the project you're interested in. <br>Feel free to shoot the questions if you have any, for the client.
-        </div>
-        {% endif%}
-        {% endif%}
-        </div>
-    </div>
-    <br>
-    {% endfor %}
+        <br>
+        {% endfor %}
     {% endif %}
 {% endif %}
 
 {% if request.user.is_client %}
 <h6 class="badge badge-pill badge-dark">Client Dashboard</h6> <br> <br>
     {% if user.is_client %}
-    <a href="{% url 'add_project' %}" class="btn btn-outline-primary">Add Project</a> <br><br>
+    <a href="{% url 'add_project' %}" class="btn btn-outline-primary">Add Project</a> <a href="{% url 'show_user' request.user.id %}" class="btn btn-outline-success">My Profile</a><br><br>
     {% endif %}
     {% for p in posted_by %}
     {% if request.user == p.user %}
@@ -59,19 +63,33 @@
         <small><i class="material-icons" style="font-size:16px">place</i> <a href="{% url 'location' p.location %}">{{ p.location }}</a> <br> <i>Posted on: {{ p.timestamp }}</i></small>
         <div class="alert alert-primary" role="alert">
             <p>Interests registered by: </p>
-            {% for a in p.interests.all %}
+            <!-- {% for a in p.interests.all %}
             {% if a.is_student %}
             <a href="{% url 'show_user' a.id %}"><small><b>{{ a.first_name }} {{ a.last_name }}</b></small><br></a>
             {% endif %}
+            {% endfor %} -->
+            {% for a in projects_status %}
+                {% if p == a.project %}
+                    
+                    {% if a.status == "registered interest" %}
+                        <a href="{% url 'show_user' a.user.id %}"><small><b>{{ a.user.first_name }} {{ a.user.last_name }}</b></small></a><br>
+                        <a href="{% url 'approve' p.id a.user.id %}" class="btn btn-success">Approve</a> &nbsp; <a href="{% url 'deny' p.id a.user.id %}" class="btn btn-danger">Deny</a><br>
+                    {% elif a.status == "open" %}
+                        <div class="alert alert-primary" role="alert">
+                            <small><a href="{% url 'show_user' a.user.id %}"><b>{{ a.user.first_name }} {{ a.user.last_name }}</b></a>'s request has been denied.</small>
+                        </div>
+                    {% elif a.status == "approved" %}
+                        <div class="alert alert-success" role="alert">
+                            <small><a href="{% url 'show_user' a.user.id %}"><b>{{ a.user.first_name }} {{ a.user.last_name }}</b></a>'s request has been approved.</small>
+                        </div>
+                    {% elif a.status == "work in progress" %}
+                        <div class="alert alert-success" role="alert">
+                            <small><a href="{% url 'show_user' a.user.id %}"><b>{{ a.user.first_name }} {{ a.user.last_name }}</b></a> has started working on the project!</small>
+                        </div>
+                    {% endif%}    
+                {% endif %}
             {% endfor %}
             
-            {% if p.status == "registered interest" %}
-            <a href="{% url 'approve' p.id %}" class="btn btn-success">Approve</a> &nbsp; <a href="{% url 'deny' p.id %}" class="btn btn-danger">Deny</a>
-            {% elif p.status == "work in progress" %}
-            <div class="alert alert-success" role="alert">
-                <small> has started working on the project!</small>
-            </div>
-            {% endif%}
         </div>
         </div>
     </div>

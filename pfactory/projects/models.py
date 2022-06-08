@@ -53,9 +53,17 @@ class Project(models.Model):
     title = models.CharField(max_length=200, null=True)
     description = RichTextField()
     technology = models.CharField(max_length=200, null=True)
-    status = models.CharField(max_length=50, null=True, default="open")
     location = models.CharField(max_length=50, null=True, choices=STATE_CHOICES)
     industry = models.CharField(max_length=50, null=True, choices=INDUSTRY_CHOICES)
     company = models.CharField(max_length=50, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    interests = models.ManyToManyField(User, related_name="interests")
+
+class ProjectStatus(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    status = models.CharField(max_length=50, null=True, default="open")
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+    class Meta:
+        unique_together = [['user', 'project']]

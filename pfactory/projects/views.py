@@ -1,6 +1,6 @@
 from django.shortcuts import get_list_or_404, render, redirect, get_object_or_404
 
-from .models import Project
+from .models import Project, ProjectStatus
 from .forms import ProjectModelForm
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
@@ -23,11 +23,16 @@ def view_projects(request):
     except(EmptyPage, InvalidPage):
         obj = paginator.page(paginator.num_pages)
     context = {"projects":obj, "number":num}
+    context["projects_status"] = get_list_or_404(ProjectStatus)
     return render(request, "projects.html", context)
 
 def view_project(request, id):
     project = get_object_or_404(Project, id=id)
-    return render(request, "show_project.html", { "p": project })
+    try:
+        projects_status = ProjectStatus.objects.get(project=project, user=request.user)
+    except:
+        projects_status = False
+    return render(request, "show_project.html", { "p": project, "projects_status": projects_status})
 
 def add_project(request):
     form = ProjectModelForm(request.POST or None)
@@ -54,57 +59,78 @@ def update_project(request, id):
 
 def register_interest(request, p_id):
     obj = get_object_or_404(Project, pk=p_id)
-    if obj.status == "open" or "register_interest":
-        obj.status = "registered interest"
-        obj.interests.add(request.user)
-    obj.save(update_fields=["status"])
-    projects = get_list_or_404(Project, pk=p_id)
-    return render(request, "projects.html", { "projects": projects })
+    try:
+        obj_status = ProjectStatus.objects.create(project=obj, user=request.user, status="registered interest")
+        print(obj_status.id)
+    except:
+        msg = "Registering interest failed!"
+    try:
+        projects_status = ProjectStatus.objects.get(project=obj, user=request.user)
+    except:
+        projects_status = False
+    return render(request, "show_project.html", { "p": obj,"projects_status": projects_status })
 
 def show_profile(request, id):
-    obj = Project.objects.filter(interests=request.user).order_by('-id')
     posted_by = Project.objects.filter(user=request.user).order_by('-id')
     context = {}
-    context["projects"] = obj
+    context["projects"] = ProjectStatus.objects.filter(user=request.user).order_by('-id')
+    context["projects_status"] = ProjectStatus.objects.all()
     context["posted_by"] = posted_by
     return render(request, "profile.html", context)
 
-def approve_to_work(request, p_id):
-    obj = get_object_or_404(Project, pk=p_id)
-    if obj.status == "registered interest" and obj.user == request.user:
+def approve_to_work(request, p_id, u_id):
+    obj = get_object_or_404(ProjectStatus, project_id=p_id, user_id=u_id)
+    if obj.status == "registered interest":
         obj.status = "approved"
     obj.save(update_fields=["status"])
-    projects = get_list_or_404(Project, pk=p_id)
-    return render(request, "projects.html", { "projects": projects })
+    context = {}
+    context["projects"] = get_list_or_404(Project, pk=p_id)
+    context["projects_status"] = get_list_or_404(ProjectStatus)
+    context["posted_by"] = Project.objects.filter(user=request.user).order_by('-id')
+    return render(request, "profile.html", context)
 
-def deny_to_work(request, p_id):
-    obj = get_object_or_404(Project, pk=p_id)
-    if obj.status == "registered interest" and obj.user == request.user:
-        obj.status = "open"
+def deny_to_work(request, p_id, u_id):
+    obj = get_object_or_404(ProjectStatus, project_id=p_id, user_id=u_id)
+    if obj.status == "registered interest":
+        obj.status = "denied"
     obj.save(update_fields=["status"])
-    projects = get_list_or_404(Project, pk=p_id)
-    return render(request, "projects.html", { "projects": projects })
+    context = {}
+    context["projects"] = get_list_or_404(Project, pk=p_id)
+    context["projects_status"] = get_list_or_404(ProjectStatus)
+    context["posted_by"] = Project.objects.filter(user=request.user).order_by('-id')
+    return render(request, "profile.html", context)
 
 def initiate_work(request, p_id):
-    obj = get_object_or_404(Project, pk=p_id)
+    obj = get_object_or_404(ProjectStatus, project_id=p_id, user=request.user)
     if obj.status == "approved":
         obj.status = "work in progress"
     obj.save(update_fields=["status"])
-    projects = get_list_or_404(Project, pk=p_id)
-    return render(request, "projects.html", { "projects": projects })
+    context = {}
+    context["projects"] = ProjectStatus.objects.filter(user=request.user).order_by('-id')
+    context["projects_status"] = ProjectStatus.objects.all()
+    context["posted_by"] = Project.objects.filter(user=request.user).order_by('-id')
+    return render(request, "profile.html", context)
 
 def view_tag_industry(request, ind):
-    projects = Project.objects.filter(industry=ind).distinct()[:10]
-    return render(request, "projects.html", { "projects": projects })
+    projects = Project.objects.filter(industry=ind).order_by('-id').distinct()[:10]
+    projects_status = get_list_or_404(ProjectStatus)
+    return render(request, "projects.html", { "projects": projects,"projects_status": projects_status })
 
 def view_tag_company(request, comp):
-    projects = Project.objects.filter(company=comp).distinct()[:10]
-    return render(request, "projects.html", { "projects": projects })
+    projects = Project.objects.filter(company=comp).order_by('-id').distinct()[:10]
+    projects_status = get_list_or_404(ProjectStatus)
+    return render(request, "projects.html", { "projects": projects,"projects_status": projects_status })
 
 def view_tag_location(request, loc):
-    projects = Project.objects.filter(location=loc).distinct()[:10]
-    return render(request, "projects.html", { "projects": projects })
+    projects = Project.objects.filter(location=loc).order_by('-id').distinct()[:10]
+    projects_status = get_list_or_404(ProjectStatus)
+    return render(request, "projects.html", { "projects": projects,"projects_status": projects_status })
 
 def view_tag_technology(request, tec):
-    projects = Project.objects.filter(technology=tec).distinct()[:10]
-    return render(request, "projects.html", { "projects": projects })
+    projects = Project.objects.filter(technology=tec).order_by('-id').distinct()[:10]
+    projects_status = get_list_or_404(ProjectStatus)
+    return render(request, "projects.html", { "projects": projects,"projects_status": projects_status })
+
+def footer_content():
+    projects = Project.objects.order_by('?')[:3]
+    return projects
